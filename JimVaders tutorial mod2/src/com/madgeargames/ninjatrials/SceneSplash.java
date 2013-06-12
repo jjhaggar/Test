@@ -11,10 +11,10 @@ import org.andengine.util.modifier.IModifier;
 
 import com.madgeargames.ninjatrials.R;
 
-public class SplashScene extends Scene {
+public class SceneSplash extends Scene {
 	BaseActivity activity;
 
-	public SplashScene() {
+	public SceneSplash() {
 		setBackground(new Background(0.09804f, 0.6274f, 0));
 		activity = BaseActivity.getSharedInstance();
 		Text title1 = new Text(0, 0, activity.mFont,

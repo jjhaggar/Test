@@ -21,6 +21,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	public Font mFont;
 	public Camera mCamera;
 
+	
 	// A reference to the current scene
 	public Scene mCurrentScene;
 	public static BaseActivity instance;
@@ -49,7 +50,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	@Override
 	protected Scene onCreateScene() {
 		mEngine.registerUpdateHandler(new FPSLogger());
-		mCurrentScene = new SplashScene();
+		mCurrentScene = new SceneSplash();
 		return mCurrentScene;
 	}
 
