@@ -41,7 +41,7 @@ public class SceneSplash extends Scene {
 	}
 
 	void loadResources() {
-		DelayModifier dMod = new DelayModifier(2,
+		DelayModifier dMod = new DelayModifier(4,
 				new IEntityModifierListener() {
 
 					@Override
