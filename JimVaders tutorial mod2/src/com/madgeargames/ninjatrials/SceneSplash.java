@@ -12,69 +12,36 @@ import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.util.modifier.IModifier;
 
+import android.util.Log;
+
 public class SceneSplash extends Scene {
 	BaseActivity activity;
 	
-	private Sprite spriteLogoMG = BaseActivity.mSpriteLogo;
-	private float timePreLogo = 0.5f;
-	private float timeLogoIn = 0.5f;
-	private float timeLogoStay = 1f;
-	private float timeLogoOut = 0.5f;
-	private float timePostLogo = 0.5f;
+	private Sprite spriteLogoMG; // = BaseActivity.mSpriteLogo;
+	private float timePreLogo, timeLogoIn, timeLogoStay, timeLogoOut, timePostLogo;
 	
 	public SceneSplash() {
-		//setBackground(new Background(0.09804f, 0.6274f, 0));
-		setBackground(new Background(0, 0, 0));
+		
 		activity = BaseActivity.getSharedInstance();
 		
-		/*
-		Text title1 = new Text(0, 0, activity.mFont,
-				activity.getString(R.string.title_1),
-				activity.getVertexBufferObjectManager());
-		Text title2 = new Text(0, 0, activity.mFont,
-				activity.getString(R.string.title_2),
-				activity.getVertexBufferObjectManager());
-
-		title1.setPosition(-title1.getWidth(), activity.mCamera.getHeight() / 2);
-		title2.setPosition(activity.mCamera.getWidth(),
-				activity.mCamera.getHeight() / 2);
-
-		attachChild(title1);
-		attachChild(title2);
-
-		title1.registerEntityModifier(new MoveXModifier(1, title1.getX(),
-				activity.mCamera.getWidth() / 2 - title1.getWidth()));
-		title2.registerEntityModifier(new MoveXModifier(1, title2.getX(),
-				activity.mCamera.getWidth() / 2));
-		*/
+		spriteLogoMG = activity.mSpriteLogo;
 		
+		timePreLogo = 0.5f;
+		timeLogoIn = 0.5f;
+		timeLogoStay = 1f;
+		timeLogoOut = 0.5f;
+		timePostLogo = 0.5f;
+		
+		
+		
+		setBackground(new Background(0, 0, 0));
+				
 		// spriteLogoMG.setPosition(activity.CENTER_X, activity.CENTER_Y);
+		
 		spriteLogoMG.setAlpha(0);
 		spriteLogoMG.setScale(0.9f);
 		
 		attachChild(spriteLogoMG);
-		/*
-		final AlphaModifier entradaLogo = new AlphaModifier(1, 0, 1)
-		{
-	        @Override
-	        protected void onModifierStarted(IEntity pItem)
-	        {
-	                super.onModifierStarted(pItem);
-	                // Your action after starting modifier
-	        }
-	       
-	        @Override
-	        protected void onModifierFinished(IEntity pItem)
-	        {
-	                super.onModifierFinished(pItem);
-	                // Your action after finishing modifier
-	        }
-		};
-		*/
-		
-		// spriteLogoMG.registerEntityModifier( new MoveXModifier(2, 350, 450) );
-		
-		
 		
 		spriteLogoMG.registerEntityModifier(
 			new SequenceEntityModifier(
@@ -92,7 +59,6 @@ public class SceneSplash extends Scene {
 			)
 		);
 		
-		
 		loadResources();
 	}
 
@@ -104,11 +70,18 @@ public class SceneSplash extends Scene {
 					public void onModifierStarted(IModifier<IEntity> arg0,
 							IEntity arg1) {
 						// TODO Auto-generated method stub
+						// musica
+						
 					}
 
 					@Override
 					public void onModifierFinished(IModifier<IEntity> arg0,
 							IEntity arg1) {
+						
+						spriteLogoMG.detachSelf(); // Importante o no se podrá volver a crear la SceneSplash
+						
+						// activity.mCurrentScene.detachSelf();
+						
 						activity.setCurrentScene(new SceneMainMenu());
 					}
 				});

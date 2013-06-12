@@ -24,11 +24,18 @@ import android.graphics.Typeface;
 import android.util.Log;
 
 public class BaseActivity extends SimpleBaseGameActivity {
-
-	static final int CAMERA_WIDTH = 800;
-	static final int CAMERA_HEIGHT = 480;
+	
+	/*
+	static final int CAMERA_WIDTH = 1920; //800;
+	static final int CAMERA_HEIGHT = 1080; //480;
 	static final int CENTER_X = CAMERA_WIDTH / 2;
 	static final int CENTER_Y = CAMERA_HEIGHT / 2;
+	*/
+	
+	public int CAMERA_WIDTH = 1920; //800;
+	public int CAMERA_HEIGHT = 1080; //480;
+	public int CENTER_X = CAMERA_WIDTH / 2;
+	public int CENTER_Y = CAMERA_HEIGHT / 2;
 	
 	
 
@@ -37,7 +44,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 
 	private BuildableBitmapTextureAtlas mBuildableBitmapTextureAtlas;
 	private ITextureRegion mSVGTestTextureRegions;// = new BaseTextureRegion();
-	public static Sprite mSpriteLogo;
+	public Sprite mSpriteLogo;
 	
 	// A reference to the current scene
 	public Scene mCurrentScene;
@@ -70,7 +77,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	private void loadFonts() {
 		mFont = FontFactory.create(this.getFontManager(),
 				this.getTextureManager(), 256, 256,
-				Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32);
+				Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 64);// 32); // con valores grandes, peta (posiblemente por el tamaño del texturemanager)
 		mFont.load();
 	}
 	
@@ -78,7 +85,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 		this.mBuildableBitmapTextureAtlas = new BuildableBitmapTextureAtlas(this.getTextureManager(), 1024, 1024, TextureOptions.NEAREST);
 		SVGBitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
 		
-		this.mSVGTestTextureRegions = SVGBitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mBuildableBitmapTextureAtlas, this, "logo_madgear.svg", 400, 400);
+		this.mSVGTestTextureRegions = SVGBitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mBuildableBitmapTextureAtlas, this, "logo_madgear.svg", 800, 800);
 		
 		try {
 			this.mBuildableBitmapTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
@@ -86,7 +93,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 		} catch (final TextureAtlasBuilderException e) {
 			Debug.e(e);
 		}
-		mSpriteLogo = new Sprite(CENTER_X, CENTER_Y, 400, 400, mSVGTestTextureRegions, this.getVertexBufferObjectManager());
+		mSpriteLogo = new Sprite(CENTER_X, CENTER_Y, 800, 800, mSVGTestTextureRegions, this.getVertexBufferObjectManager());
 		
 	}
 	
@@ -119,8 +126,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	
 	@Override
 	public void onBackPressed() {
-		Log.v("Jimvaders",
-				"BaseActivity BackPressed " + mCurrentScene.toString());
+		Log.v("NinjaTrials", "BaseActivity BackPressed " + mCurrentScene.toString());
 		if (mCurrentScene instanceof SceneGame)
 			((SceneGame) mCurrentScene).detach();
 

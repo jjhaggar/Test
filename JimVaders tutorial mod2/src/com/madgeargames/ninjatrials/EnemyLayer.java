@@ -61,7 +61,9 @@ public class EnemyLayer extends Entity {
 
 			Random r = new Random();
 			e.sprite.setPosition(r.nextInt(2) == 0 ? -e.sprite.getWidth() * 3
-					: BaseActivity.CAMERA_WIDTH + e.sprite.getWidth() * 3,
+					
+					: BaseActivity.getSharedInstance().CAMERA_WIDTH + e.sprite.getWidth() * 3,
+			//		: BaseActivity.CAMERA_WIDTH + e.sprite.getWidth() * 3,
 					(r.nextInt(5) + 1) * e.sprite.getHeight());
 			e.sprite.setVisible(true);
 

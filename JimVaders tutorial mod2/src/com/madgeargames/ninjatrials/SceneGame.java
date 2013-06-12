@@ -107,6 +107,7 @@ public class SceneGame extends Scene implements IOnSceneTouchListener {
 				Log.v("Jimvaders", "SceneGame Cleaner() cleared");
 				setChildScene(new SceneResult(mCamera));
 				clearUpdateHandlers();
+				Log.v("Jimvaders", "fimniquetado");
 			}
 			Iterator<Enemy> eIt = EnemyLayer.getIterator();
 			while (eIt.hasNext()) {
