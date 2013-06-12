@@ -9,12 +9,12 @@ import org.andengine.entity.scene.menu.item.TextMenuItem;
 import com.madgeargames.ninjatrials.R;
 
 //placeHolder scene class for the main menu, currently only includes a start menu item 
-public class MainMenuScene extends MenuScene implements
+public class SceneMainMenu extends MenuScene implements
 		IOnMenuItemClickListener {
 	BaseActivity activity;
 	final int MENU_START = 0;
 
-	public MainMenuScene() {
+	public SceneMainMenu() {
 		super(BaseActivity.getSharedInstance().mCamera);
 		activity = BaseActivity.getSharedInstance();
 
@@ -35,7 +35,7 @@ public class MainMenuScene extends MenuScene implements
 			float arg2, float arg3) {
 		switch (arg1.getID()) {
 		case MENU_START:
-			activity.setCurrentScene(new GameScene());
+			activity.setCurrentScene(new SceneGame());
 			return true;
 		default:
 			break;

@@ -7,7 +7,7 @@ import android.hardware.SensorEventListener;
 public class SensorListener implements SensorEventListener {
 
 	static SensorListener instance;
-	GameScene scene;
+	SceneGame scene;
 
 	public static SensorListener getSharedInstance() {
 		if (instance == null)
@@ -17,7 +17,7 @@ public class SensorListener implements SensorEventListener {
 
 	private SensorListener() {
 		instance = this;
-		scene = (GameScene) BaseActivity.getSharedInstance().mCurrentScene;
+		scene = (SceneGame) BaseActivity.getSharedInstance().mCurrentScene;
 	}
 	
 	@Override

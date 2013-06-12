@@ -16,6 +16,7 @@ public class SceneSplash extends Scene {
 
 	public SceneSplash() {
 		setBackground(new Background(0.09804f, 0.6274f, 0));
+		setBackground(new Background(0.9f, 0.9f, 0.9f));
 		activity = BaseActivity.getSharedInstance();
 		Text title1 = new Text(0, 0, activity.mFont,
 				activity.getString(R.string.title_1),
@@ -52,7 +53,7 @@ public class SceneSplash extends Scene {
 					@Override
 					public void onModifierFinished(IModifier<IEntity> arg0,
 							IEntity arg1) {
-						activity.setCurrentScene(new MainMenuScene());
+						activity.setCurrentScene(new SceneMainMenu());
 					}
 				});
 

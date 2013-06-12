@@ -22,6 +22,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	public Camera mCamera;
 
 	
+	
 	// A reference to the current scene
 	public Scene mCurrentScene;
 	public static BaseActivity instance;
@@ -66,8 +67,8 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	public void onBackPressed() {
 		Log.v("Jimvaders",
 				"BaseActivity BackPressed " + mCurrentScene.toString());
-		if (mCurrentScene instanceof GameScene)
-			((GameScene) mCurrentScene).detach();
+		if (mCurrentScene instanceof SceneGame)
+			((SceneGame) mCurrentScene).detach();
 
 		mCurrentScene = null;
 		SensorListener.instance = null;

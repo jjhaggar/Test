@@ -66,7 +66,7 @@ public class Ship {
 	public void shoot() {
 		if (!moveable)
 			return;
-		GameScene scene = (GameScene) BaseActivity.getSharedInstance().mCurrentScene;
+		SceneGame scene = (SceneGame) BaseActivity.getSharedInstance().mCurrentScene;
 
 		Bullet b = BulletPool.sharedBulletPool().obtainPoolItem();
 		b.sprite.setPosition(sprite.getX() + sprite.getWidth() / 2,

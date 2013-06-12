@@ -26,7 +26,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.util.Log;
 
-public class GameScene extends Scene implements IOnSceneTouchListener {
+public class SceneGame extends Scene implements IOnSceneTouchListener {
 	public Ship ship;
 	Camera mCamera;
 	public float accelerometerSpeedX;
@@ -35,7 +35,7 @@ public class GameScene extends Scene implements IOnSceneTouchListener {
 	public int bulletCount;
 	public int missCount;
 
-	public GameScene() {
+	public SceneGame() {
 		setBackground(new Background(0.09804f, 0.6274f, 0.8784f));
 		// attaching an EnemyLayer entity with 12 enemies on it
 		attachChild(new EnemyLayer(12));
@@ -87,7 +87,7 @@ public class GameScene extends Scene implements IOnSceneTouchListener {
 	}
 
 	public void detach() {
-		Log.v("Jimvaders", "GameScene onDetached()");
+		Log.v("Jimvaders", "SceneGame onDetached()");
 		clearUpdateHandlers();
 		for (Bullet b : bulletList) {
 			BulletPool.sharedBulletPool().recyclePoolItem(b);
@@ -104,8 +104,8 @@ public class GameScene extends Scene implements IOnSceneTouchListener {
 		synchronized (this) {
 			// if all Enemies are killed
 			if (EnemyLayer.isEmpty()) {
-				Log.v("Jimvaders", "GameScene Cleaner() cleared");
-				setChildScene(new ResultScene(mCamera));
+				Log.v("Jimvaders", "SceneGame Cleaner() cleared");
+				setChildScene(new SceneResult(mCamera));
 				clearUpdateHandlers();
 			}
 			Iterator<Enemy> eIt = EnemyLayer.getIterator();

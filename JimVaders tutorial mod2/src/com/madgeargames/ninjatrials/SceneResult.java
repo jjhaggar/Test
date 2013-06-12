@@ -11,16 +11,16 @@ import org.andengine.input.touch.TouchEvent;
 
 import com.madgeargames.ninjatrials.R;
 
-public class ResultScene extends CameraScene implements IOnSceneTouchListener {
+public class SceneResult extends CameraScene implements IOnSceneTouchListener {
 
 	boolean done;
 	BaseActivity activity;
 
-	public ResultScene(Camera mCamera) {
+	public SceneResult(Camera mCamera) {
 		super(mCamera);
 		activity = BaseActivity.getSharedInstance();
 		setBackgroundEnabled(false);
-		GameScene scene = (GameScene) activity.mCurrentScene;
+		SceneGame scene = (SceneGame) activity.mCurrentScene;
 		float accureay = 1 - (float) scene.missCount / scene.bulletCount;
 		if (Float.isNaN(accureay))
 			accureay = 0;
@@ -50,7 +50,7 @@ public class ResultScene extends CameraScene implements IOnSceneTouchListener {
 	public boolean onSceneTouchEvent(Scene arg0, TouchEvent arg1) {
 		if (!done)
 			return true;
-		((GameScene) activity.mCurrentScene).resetValues();
+		((SceneGame) activity.mCurrentScene).resetValues();
 		return false;
 	}
 
