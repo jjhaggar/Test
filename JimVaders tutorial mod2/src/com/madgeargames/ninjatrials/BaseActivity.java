@@ -37,7 +37,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 
 	private BuildableBitmapTextureAtlas mBuildableBitmapTextureAtlas;
 	private ITextureRegion mSVGTestTextureRegions;// = new BaseTextureRegion();
-	
+	public static Sprite mSpriteLogo;
 	
 	// A reference to the current scene
 	public Scene mCurrentScene;
@@ -86,6 +86,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 		} catch (final TextureAtlasBuilderException e) {
 			Debug.e(e);
 		}
+		mSpriteLogo = new Sprite(CENTER_X, CENTER_Y, 400, 400, mSVGTestTextureRegions, this.getVertexBufferObjectManager());
 		
 	}
 	
@@ -103,8 +104,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	protected Scene onCreateScene() {
 		mEngine.registerUpdateHandler(new FPSLogger());
 		mCurrentScene = new SceneSplash();
-		
-		mCurrentScene.attachChild( new Sprite(CENTER_X, CENTER_Y, 400, 400, mSVGTestTextureRegions, this.getVertexBufferObjectManager()) );
+		// mCurrentScene.attachChild( mSpriteLogo );
 		
 		return mCurrentScene;
 	}

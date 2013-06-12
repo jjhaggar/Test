@@ -1,23 +1,33 @@
 package com.madgeargames.ninjatrials;
 
 import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.modifier.DelayModifier;
 import org.andengine.entity.modifier.IEntityModifier.IEntityModifierListener;
-import org.andengine.entity.modifier.MoveXModifier;
+import org.andengine.entity.modifier.ParallelEntityModifier;
+import org.andengine.entity.modifier.ScaleModifier;
+import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.text.Text;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.util.modifier.IModifier;
-
-import com.madgeargames.ninjatrials.R;
 
 public class SceneSplash extends Scene {
 	BaseActivity activity;
-
+	
+	private Sprite spriteLogoMG = BaseActivity.mSpriteLogo;
+	private float timePreLogo = 0.5f;
+	private float timeLogoIn = 0.5f;
+	private float timeLogoStay = 1f;
+	private float timeLogoOut = 0.5f;
+	private float timePostLogo = 0.5f;
+	
 	public SceneSplash() {
-		setBackground(new Background(0.09804f, 0.6274f, 0));
-		setBackground(new Background(0.9f, 0.9f, 0.9f));
+		//setBackground(new Background(0.09804f, 0.6274f, 0));
+		setBackground(new Background(0, 0, 0));
 		activity = BaseActivity.getSharedInstance();
+		
+		/*
 		Text title1 = new Text(0, 0, activity.mFont,
 				activity.getString(R.string.title_1),
 				activity.getVertexBufferObjectManager());
@@ -36,12 +46,58 @@ public class SceneSplash extends Scene {
 				activity.mCamera.getWidth() / 2 - title1.getWidth()));
 		title2.registerEntityModifier(new MoveXModifier(1, title2.getX(),
 				activity.mCamera.getWidth() / 2));
-
+		*/
+		
+		// spriteLogoMG.setPosition(activity.CENTER_X, activity.CENTER_Y);
+		spriteLogoMG.setAlpha(0);
+		spriteLogoMG.setScale(0.9f);
+		
+		attachChild(spriteLogoMG);
+		/*
+		final AlphaModifier entradaLogo = new AlphaModifier(1, 0, 1)
+		{
+	        @Override
+	        protected void onModifierStarted(IEntity pItem)
+	        {
+	                super.onModifierStarted(pItem);
+	                // Your action after starting modifier
+	        }
+	       
+	        @Override
+	        protected void onModifierFinished(IEntity pItem)
+	        {
+	                super.onModifierFinished(pItem);
+	                // Your action after finishing modifier
+	        }
+		};
+		*/
+		
+		// spriteLogoMG.registerEntityModifier( new MoveXModifier(2, 350, 450) );
+		
+		
+		
+		spriteLogoMG.registerEntityModifier(
+			new SequenceEntityModifier(
+				new DelayModifier(timePreLogo),// en negro, antes del logo
+				new ParallelEntityModifier(// entrada logo
+						new AlphaModifier(timeLogoIn, 0, 1), 
+						new ScaleModifier(timeLogoIn, 0.95f, 1)
+				),
+				new DelayModifier(timeLogoStay),// logo quieto
+				new ParallelEntityModifier(// entrada logo
+						new AlphaModifier(timeLogoOut, 1, 0), 
+						new ScaleModifier(timeLogoOut, 1, 0.95f)
+				),
+				new DelayModifier(timePostLogo) // en negro, después del logo
+			)
+		);
+		
+		
 		loadResources();
 	}
 
 	void loadResources() {
-		DelayModifier dMod = new DelayModifier(4,
+		DelayModifier dMod = new DelayModifier(timePreLogo+timeLogoIn+timeLogoStay+timeLogoOut+timePostLogo, //4,
 				new IEntityModifierListener() {
 
 					@Override
