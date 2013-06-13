@@ -127,8 +127,13 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	@Override
 	public void onBackPressed() {
 		Log.v("NinjaTrials", "BaseActivity BackPressed " + mCurrentScene.toString());
-		if (mCurrentScene instanceof SceneGame)
-			((SceneGame) mCurrentScene).detach();
+		if (mCurrentScene instanceof SceneGameShoot)
+			((SceneGameShoot) mCurrentScene).detach();
+		
+		if (mCurrentScene instanceof SceneOptionsMenu){
+			setCurrentScene(new SceneMainMenu());
+			return;
+		}
 
 		mCurrentScene = null;
 		SensorListener.instance = null;

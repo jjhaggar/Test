@@ -14,13 +14,13 @@ import org.andengine.util.modifier.IModifier;
 
 import android.util.Log;
 
-public class SceneResult extends Scene {
+public class SceneMap extends Scene {
 	BaseActivity activity;
 	
 	private Sprite spriteLogoMG; // = BaseActivity.mSpriteLogo;
 	private float timePreLogo, timeLogoIn, timeLogoStay, timeLogoOut, timePostLogo;
 	
-	public SceneResult() {
+	public SceneMap() {
 		
 		activity = BaseActivity.getSharedInstance();
 		

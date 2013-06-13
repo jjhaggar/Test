@@ -10,17 +10,16 @@ import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.text.Text;
 import org.andengine.util.modifier.IModifier;
 
-import android.util.Log;
-
-public class SceneResult extends Scene {
+public class SceneSelectPlayer extends Scene {
 	BaseActivity activity;
 	
 	private Sprite spriteLogoMG; // = BaseActivity.mSpriteLogo;
 	private float timePreLogo, timeLogoIn, timeLogoStay, timeLogoOut, timePostLogo;
 	
-	public SceneResult() {
+	public SceneSelectPlayer() {
 		
 		activity = BaseActivity.getSharedInstance();
 		
@@ -34,10 +33,12 @@ public class SceneResult extends Scene {
 		
 		
 		
-		setBackground(new Background(0, 0, 0));
+		setBackground(new Background(0.7f, 0.3f, 0.5f));
+		setBackground(new Background(0.7f, 0.7f, 0.7f));
 				
 		// spriteLogoMG.setPosition(activity.CENTER_X, activity.CENTER_Y);
 		
+		/*
 		spriteLogoMG.setAlpha(0);
 		spriteLogoMG.setScale(0.9f);
 		
@@ -58,14 +59,29 @@ public class SceneResult extends Scene {
 				new DelayModifier(timePostLogo) // en negro, después del logo
 			)
 		);
+		*/
+		
+		
+		Text title1 = new Text(activity.CENTER_X , activity.CAMERA_HEIGHT*9/10, activity.mFont,
+	        "Elige personaje",
+	        activity.getVertexBufferObjectManager());
+		
+	    //title1.setPosition(activity.CENTER_X , activity.CENTER_Y);
+	    
+	    attachChild(title1);
+	
+		 
+		
 		
 		loadResources();
 	}
 
 	void loadResources() {
 		DelayModifier dMod = new DelayModifier(timePreLogo+timeLogoIn+timeLogoStay+timeLogoOut+timePostLogo, //4,
+				
+				
 				new IEntityModifierListener() {
-
+					
 					@Override
 					public void onModifierStarted(IModifier<IEntity> arg0,
 							IEntity arg1) {
@@ -78,11 +94,11 @@ public class SceneResult extends Scene {
 					public void onModifierFinished(IModifier<IEntity> arg0,
 							IEntity arg1) {
 						
-						spriteLogoMG.detachSelf(); // Importante o no se podrá volver a crear la SceneSplash
+						// spriteLogoMG.detachSelf(); // Importante o no se podrá volver a crear la SceneSplash
 						
 						// activity.mCurrentScene.detachSelf();
 						
-						activity.setCurrentScene(new SceneMainMenu());
+						// activity.setCurrentScene(new SceneMainMenu());
 					}
 				});
 

@@ -6,8 +6,8 @@ public class GameLoopUpdateHandler implements IUpdateHandler{
 
 	@Override
 	public void onUpdate(float pSecondsElapsed) {
-		((SceneGame)BaseActivity.getSharedInstance().mCurrentScene).moveShip();
-		((SceneGame)BaseActivity.getSharedInstance().mCurrentScene).cleaner();
+		((SceneGameShoot)BaseActivity.getSharedInstance().mCurrentScene).moveShip();
+		((SceneGameShoot)BaseActivity.getSharedInstance().mCurrentScene).cleaner();
 		
 	}
 
