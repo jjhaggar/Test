@@ -127,14 +127,30 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	@Override
 	public void onBackPressed() {
 		Log.v("NinjaTrials", "BaseActivity BackPressed " + mCurrentScene.toString());
-		if (mCurrentScene instanceof SceneGameShoot)
-			((SceneGameShoot) mCurrentScene).detach();
-		
+		if (mCurrentScene instanceof SceneGameShoot){
+			((SceneGameShoot) mCurrentScene).detach(); // linea original
+			setCurrentScene(new SceneMainMenu());
+			// hay que arreglarlo, mirar lo que se usa tras mostrar la pantalla de resultados para resetearlo todo
+			return;
+		}
 		if (mCurrentScene instanceof SceneOptionsMenu){
 			setCurrentScene(new SceneMainMenu());
 			return;
 		}
-
+		
+		if (mCurrentScene instanceof SceneSelectPlayer){
+			setCurrentScene(new SceneMainMenu());
+			return;
+		}
+		if (mCurrentScene instanceof SceneGameRun){
+			setCurrentScene(new SceneMainMenu());
+			return;
+		}
+		if (mCurrentScene instanceof SceneMainMenu){
+			setCurrentScene(new SceneSplash());
+			return;
+		}
+		
 		mCurrentScene = null;
 		SensorListener.instance = null;
 		super.onBackPressed();

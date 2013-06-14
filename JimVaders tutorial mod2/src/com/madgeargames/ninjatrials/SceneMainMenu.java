@@ -67,7 +67,7 @@ public class SceneMainMenu extends MenuScene implements
 		
 		switch (arg1.getID()) {
 		case MENU_START_RUN:
-			activity.setCurrentScene(new SceneSplash());
+			activity.setCurrentScene(new SceneGameRun());
 			return true;
 		case MENU_START_SHOOT:
 			activity.setCurrentScene(new SceneGameShoot());
