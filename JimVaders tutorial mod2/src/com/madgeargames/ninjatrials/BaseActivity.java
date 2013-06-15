@@ -10,6 +10,10 @@ import org.andengine.entity.util.FPSLogger;
 import org.andengine.extension.svg.opengl.texture.atlas.bitmap.SVGBitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
+import org.andengine.opengl.font.StrokeFont;
+import org.andengine.opengl.texture.EmptyTexture;
+import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.Texture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
@@ -18,6 +22,7 @@ import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtla
 import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder.TextureAtlasBuilderException;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
+import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
 import android.graphics.Typeface;
@@ -32,14 +37,17 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	static final int CENTER_Y = CAMERA_HEIGHT / 2;
 	*/
 	
-	public int CAMERA_WIDTH = 1920; //800;
-	public int CAMERA_HEIGHT = 1080; //480;
-	public int CENTER_X = CAMERA_WIDTH / 2;
-	public int CENTER_Y = CAMERA_HEIGHT / 2;
+	public final int CAMERA_WIDTH = 1920; //800;
+	public final int CAMERA_HEIGHT = 1080; //480;
+	public final int CENTER_X = CAMERA_WIDTH / 2;
+	public final int CENTER_Y = CAMERA_HEIGHT / 2;
 	
 	
 
-	public Font mFont;
+	public Font mFont, mFontCrono, mFontStroke;
+	// public Texture mStrokeFontTexture = new Texture(256, 256, TextureOptions.BILINEAR);
+
+	
 	public Camera mCamera;
 
 	private BuildableBitmapTextureAtlas mBuildableBitmapTextureAtlas;
@@ -78,7 +86,29 @@ public class BaseActivity extends SimpleBaseGameActivity {
 		mFont = FontFactory.create(this.getFontManager(),
 				this.getTextureManager(), 256, 256,
 				Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 64);// 32); // con valores grandes, peta (posiblemente por el tamaño del texturemanager)
-		mFont.load();
+		
+		
+		FontFactory.setAssetBasePath("fonts/");
+		mFontCrono = FontFactory.createFromAsset(
+				this.getFontManager(), this.getTextureManager(), 256, 256, TextureOptions.BILINEAR, 
+				this.getAssets(), "dom_parquim.ttf", 48, true, android.graphics.Color.WHITE
+				);
+		
+		
+		final int FONT_SIZE = 96; //48;
+		final ITexture strokeFontTexture = new EmptyTexture(this.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
+		// final ITexture strokeFontTexture = new EmptyTexture(this.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+
+		mFontStroke  = new StrokeFont(this.getFontManager(), strokeFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), FONT_SIZE, true, Color.YELLOW, 2, Color.RED);
+		this.mFontStroke.load();
+		
+		// mFontStroke = new StrokeFont(this.mStrokeFontTexture, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 48, true, Color.BLACK, 2, Color.WHITE);
+
+		
+		// getFontManager().loadFonts(this.mFont, this.mFontCrono, this.mFontStroke);
+		
+		 mFont.load();
+		 this.mFontCrono.load();
 	}
 	
 	private void loadGraphics() {
@@ -143,6 +173,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 			return;
 		}
 		if (mCurrentScene instanceof SceneGameRun){
+			((SceneGameRun)mCurrentScene).resetScene(); // Cuando todas las escenas tengan su resetScene() no hará falta el casting 
 			setCurrentScene(new SceneMainMenu());
 			return;
 		}

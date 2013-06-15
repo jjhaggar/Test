@@ -1,15 +1,19 @@
 package com.madgeargames.ninjatrials;
 
+import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
-import org.andengine.entity.modifier.DelayModifier;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
 import org.andengine.entity.util.FPSCounter;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.Font;
+import org.andengine.util.adt.align.HorizontalAlign;
+
+import android.util.Log;
 
 public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	
@@ -20,6 +24,8 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	private int pulsacionesInt = 0;
 	private float ppsFloat = 0;
 	private float ppsRecordFloat = 0;
+	
+	private HUDTimer mHud;
 	
 	public SceneGameRun() {
 		
@@ -33,9 +39,13 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		final float centerX = activity.CENTER_X;
 		
 		final Text elapsedText = new Text(centerX, 600, this.mFont, "Seconds elapsed:", "Seconds elapsed: XXXXXX".length(), activity.getVertexBufferObjectManager());
+		
 		final Text fpsText = new Text(centerX, 500, this.mFont, "FPS:", "FPS: XXXXX".length(), activity.getVertexBufferObjectManager());
+		// final Text fpsText = new Text(centerX, 500, this.mFont, "FPS:", "FPS: XXXXX".length(), new TextOptions(HorizontalAlign.RIGHT), activity.getVertexBufferObjectManager());
+		// parece que se pasa por el forro cómo se alinee el texto
 		
 		final Text pulsacionesText = new Text(centerX, 400, this.mFont, "Pulsaciones:", "Pulsaciones: XXXXXX".length(), activity.getVertexBufferObjectManager()); // cuidado con el tamaño mínimo/máximo
+		// final Text pulsacionesText = new Text(centerX, 400, this.mFont, "Pulsaciones:", "Pulsaciones: XXXXXX".length(), new TextOptions(HorizontalAlign.LEFT), activity.getVertexBufferObjectManager()); // cuidado con el tamaño mínimo/máximo
 		
 		final Text ppsText = new Text(centerX, 300, this.mFont, "PPS:", "PPS: XX,XX".length(), activity.getVertexBufferObjectManager());
 		final Text ppsRecordText = new Text(centerX, 200, this.mFont, "Record PPS:", "Record PPS: XX,XX".length(), activity.getVertexBufferObjectManager());
@@ -46,6 +56,18 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		this.attachChild(pulsacionesText);
 		this.attachChild(ppsText);
 		this.attachChild(ppsRecordText );
+		
+		Log.v("Prueba pulsar rápido", "Antes de crear HUD");
+		
+		// this.attachChild( new SceneGameRunHUD() );
+		
+		// Create the HUD
+		mHud = new HUDTimer(); //new SceneGameRunHUD();
+		    
+		// Attach the HUD to the camera
+		activity.mCamera.setHUD(mHud);
+
+		
 		
 		this.registerUpdateHandler(new TimerHandler(1 / 10.0f, true, new ITimerCallback() {
 			@Override
@@ -96,5 +118,18 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		
 		return false;
 	}
+	
+	
+	public void resetScene(){
+		
+		
+		
+		
+		mHud.detachChildren(); // activity.mCamera.getHUD().detachChildren();
+		mHud.detachSelf(); // activity.mCamera.getHUD().detachSelf();
+		
+		
+	}
+	
 
 }
