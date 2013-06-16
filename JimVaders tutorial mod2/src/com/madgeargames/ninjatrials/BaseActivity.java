@@ -5,7 +5,9 @@ import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.util.FPSLogger;
 import org.andengine.extension.svg.opengl.texture.atlas.bitmap.SVGBitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.font.Font;
@@ -16,6 +18,7 @@ import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.Texture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSource;
 import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
@@ -53,6 +56,13 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	private BuildableBitmapTextureAtlas mBuildableBitmapTextureAtlas;
 	private ITextureRegion mSVGTestTextureRegions;// = new BaseTextureRegion();
 	public Sprite mSpriteLogo;
+	
+	
+	private BuildableBitmapTextureAtlas mBuildableBitmapTextureAtlasHUD; // 1024*578
+	private ITextureRegion mTexRegHUDPowerBar, mTexRegHUDPrecissionBar, mTexRegHUDLine, mTexRegHUDLineMark, mTexRegHUDHeads, mTexRegHUDEyeFire;
+	public Sprite mSpriteHUD;
+	
+	
 	
 	// A reference to the current scene
 	public Scene mCurrentScene;
@@ -112,18 +122,75 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	}
 	
 	private void loadGraphics() {
+		
+		// Logo Splash
 		this.mBuildableBitmapTextureAtlas = new BuildableBitmapTextureAtlas(this.getTextureManager(), 1024, 1024, TextureOptions.NEAREST);
 		SVGBitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-		
 		this.mSVGTestTextureRegions = SVGBitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mBuildableBitmapTextureAtlas, this, "logo_madgear.svg", 800, 800);
-		
 		try {
 			this.mBuildableBitmapTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
 			this.mBuildableBitmapTextureAtlas.load();
 		} catch (final TextureAtlasBuilderException e) {
 			Debug.e(e);
 		}
-		mSpriteLogo = new Sprite(CENTER_X, CENTER_Y, 800, 800, mSVGTestTextureRegions, this.getVertexBufferObjectManager());
+		this.mSpriteLogo = new Sprite(CENTER_X, CENTER_Y, 800, 800, mSVGTestTextureRegions, this.getVertexBufferObjectManager());
+		
+		
+		
+		
+		
+		// Gráficos del HUD
+		this.mBuildableBitmapTextureAtlasHUD = new BuildableBitmapTextureAtlas(mEngine.getTextureManager(), 1024, 1024, TextureOptions.DEFAULT); // 1024*578
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+		
+		mTexRegHUDPowerBar = 
+				BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBuildableBitmapTextureAtlasHUD, this, "hud_power_bar.png");
+		mTexRegHUDPrecissionBar = 
+				BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBuildableBitmapTextureAtlasHUD, this, "hud_precission_bar.png");
+		mTexRegHUDHeads = 
+				BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBuildableBitmapTextureAtlasHUD, this, "hud_heads.png");
+		
+		try { // Buildable bitmap texture atlases require a try/catch statement
+			mBuildableBitmapTextureAtlasHUD.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 1));
+		} catch (TextureAtlasBuilderException e) {
+			e.printStackTrace();
+		}
+		mBuildableBitmapTextureAtlasHUD.load(); // Once the atlas has been built, we can now load
+		
+		
+		
+		
+		//this.mTexRegHUDPowerBar = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.mBuildableBitmapTextureAtlasHUD, 
+		//																				 this.getAssets(), "gfx/hud_power_bar.png");
+		//this.mSpriteHUD = new Sprite(CENTER_X, CENTER_Y, 120, 240, this.mTexRegHUDPowerBar, this.getVertexBufferObjectManager());
+		
+		
+		
+		
+		
+		
+		/*
+		private ITextureRegion mTexRegHUDPrecissionBar;
+		private ITextureRegion mTexRegHUDLine;
+		private ITextureRegion mTexRegHUDLineMark;
+		private ITextureRegion mTexRegHUDHeads;
+		private ITextureRegion mTexRegHUDEyeFire;
+		
+		
+		
+		hud_fire.png
+		hud_heads.png
+		hud_line_bar.png
+		hud_line_mark.png
+		hud_power_bar.png
+		hud_precission_bar.png
+
+		*/
+		
+		// mTextureRegionHUD; 
+		// mHUD;
+				
+		
 		
 	}
 	
@@ -140,8 +207,22 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	@Override
 	protected Scene onCreateScene() {
 		mEngine.registerUpdateHandler(new FPSLogger());
-		mCurrentScene = new SceneSplash();
-		// mCurrentScene.attachChild( mSpriteLogo );
+		
+		// mCurrentScene = new SceneSplash();
+		// mCurrentScene = new SceneMainMenu();
+		mCurrentScene = new SceneGameRun();
+		
+
+		
+		final Sprite mSpriteHUDPowerBar = new Sprite(120, 200, this.mTexRegHUDPowerBar, this.getVertexBufferObjectManager());
+		final Sprite mSpriteHUDPrecissionBar = new Sprite(350, 130, this.mTexRegHUDPrecissionBar, this.getVertexBufferObjectManager());
+		final Sprite mSpriteHUDHeads = new Sprite(400, 850, this.mTexRegHUDHeads, this.getVertexBufferObjectManager());
+		
+		mCurrentScene.attachChild(mSpriteHUDPowerBar);
+		mCurrentScene.attachChild(mSpriteHUDPrecissionBar);
+		mCurrentScene.attachChild(mSpriteHUDHeads);
+		
+		
 		
 		return mCurrentScene;
 	}

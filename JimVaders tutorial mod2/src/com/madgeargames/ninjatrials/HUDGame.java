@@ -1,49 +1,64 @@
 package com.madgeargames.ninjatrials;
 
+import java.text.DecimalFormat;
+
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
-import org.andengine.entity.text.TextOptions;
 import org.andengine.opengl.font.Font;
-import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.adt.align.HorizontalAlign;
+import org.andengine.opengl.font.FontFactory;
+import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 
 import android.util.Log;
 
-public class SceneGameRunHUD extends HUD{
+public class HUDGame extends HUD{
+	
+	
+	// Constants          
+	public static final int RUNNING_STAGE = 0;
+	public static final int CUTTING_STAGE = 1;
+	public static final int JUMPING_STAGE = 2;
+	public static final int THROWING_STAGE= 3;
+	
 	
 	private BaseActivity activity;
 	
-	private Font mFont;
-	private final Text ppsRecordText; 
+	// Timer fields
+	private Font mFontTimer; //private Font mFontSecs, mFontCent;
+	private Text mTextTimer; // private Text mTextSecs, mTextCent;
+	private int mIntTimerMarginX = 40;
+	private int mIntTimerMarginY = 40;
 	
-	public SceneGameRunHUD(){
-		
-		// Log.v("Prueba pulsar rápido", "dentro HUD");
+	
+	// PowerBarVertical fields
+	private int mIntPowBarVer; 
+	private Sprite mSpriteHUD;
+	
+	
+	
+	// Constructor
+	public HUDGame(int typeOfGameScene){ //Font mFont){ // Log.v("Prueba pulsar rápido", "dentro HUD");
 		
 		activity = BaseActivity.getSharedInstance();
 		
-		mFont = activity.mFontStroke; // activity.mFontCrono;
+		switch (typeOfGameScene) {
+		case RUNNING_STAGE:
+			createTimer();
+			createPowerBarVertical();
+			//createPlayerFace();
+			break;
+		case THROWING_STAGE:
+			createTimer();
+			//createPlayerFace();
+			//createShurikensAvailable();
+		default:
+			break;
+		}
 		
-		// Ahora a crear el temporizador aquí. Después lo acicalaremos con algo de herencia
-		final VertexBufferObjectManager vertexBufferObjectManager = activity.getVertexBufferObjectManager();
-		final Text centerText = new Text(activity.CENTER_X, 400, this.mFont, "Hello AndEngine!\nYou can even have multilined text!", new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
-		final Text leftText = new Text(activity.CENTER_X, 250, this.mFont, "Also left aligned!\nLorem ipsum dolor sit amat...", new TextOptions(HorizontalAlign.LEFT), vertexBufferObjectManager);
-		final Text rightText = new Text(activity.CENTER_X, 100, this.mFont, "And right aligned!\nLorem ipsum dolor sit etc...", 
-				new TextOptions(HorizontalAlign.RIGHT), vertexBufferObjectManager);
-
-		
-		
-		
-		
-		
-		ppsRecordText = new Text(activity.CENTER_X, 100, this.mFont, "Record PPS:", 
-				"Record PPS: XX,XX".length(), activity.getVertexBufferObjectManager());
-		
-		this.attachChild(ppsRecordText);
-		
-		ppsRecordText.setText( "Funcionando! :D" );
 		
 	}
+	
 	
 	
 	/*
@@ -119,5 +134,74 @@ public class SceneGameRunHUD extends HUD{
 	// ===========================================================  
 	
 	*/
-
+	
+	
+	public void createPowerBarVertical(){
+		/*
+		this.mSpriteHUD = activity.mSpriteHUD;
+		this.mSpriteHUD.setPosition(100, 100);
+		this.attachChild(this.mSpriteHUD);
+		*/
+		
+	}
+	
+	public void updatePowerBarVertical(int actualPower){
+		
+	}
+	
+	public void createTimer(){
+		
+		FontFactory.setAssetBasePath("fonts/");
+		final BitmapTextureAtlas mTextureFontTimer = new BitmapTextureAtlas(activity.getTextureManager(),1024, 1024, TextureOptions.BILINEAR);
+		this.mFontTimer = FontFactory.createStrokeFromAsset(activity.getFontManager(), mTextureFontTimer , activity.getAssets(), 
+				"monofonto.ttf", (float)180, true, android.graphics.Color.YELLOW, 7, android.graphics.Color.RED ); // dom_parquim.ttf
+		this.mFontTimer.load();
+		this.mTextTimer = new Text( 0, 0, 
+				mFontTimer, "00.00", "00.00".length(), activity.getVertexBufferObjectManager());
+		// mIntTimerMarginX = mIntTimerMarginY = 40;
+		this.mTextTimer.setPosition(activity.CAMERA_WIDTH - mTextTimer.getWidth() /2 -mIntTimerMarginX, 
+									activity.CAMERA_HEIGHT- mTextTimer.getHeight()/2 -mIntTimerMarginY );
+		this.attachChild(mTextTimer);
+	}
+	
+	public void updateTimer(float actualTime){
+		
+		if (actualTime >= 100) { // Cuidamos que no se intente mostrar un número más largo de 5 caracteres "00.00"
+			Log.w(this.getClass().toString(), "Sólo se puede marcar hasta 99,99 de tiempo");
+			this.mTextTimer.setText("ERROR");
+			return;
+		}
+		DecimalFormat mFormatter = new DecimalFormat("00.00");
+		String output = mFormatter.format(actualTime);
+		this.mTextTimer.setText(output);
+		// this.mTextTimer.setText(String.format("%02.2f", actualTime) ); 
+	}
+	
+	public void resetTimer(){
+		// this.mTextTimer.detachSelf();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public void resetHUD(){
+		
+		// resetTimer();
+		
+	}
+	
+	
 }

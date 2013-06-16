@@ -25,7 +25,7 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	private float ppsFloat = 0;
 	private float ppsRecordFloat = 0;
 	
-	private HUDTimer mHud;
+	private HUDGame mHud;
 	
 	public SceneGameRun() {
 		
@@ -62,10 +62,15 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		// this.attachChild( new SceneGameRunHUD() );
 		
 		// Create the HUD
-		mHud = new HUDTimer(); //new SceneGameRunHUD();
+		mHud = new HUDGame(HUDGame.RUNNING_STAGE); //new SceneGameRunHUD();
+		
+		// HUDTimer2 mHud2 = new HUDTimer2(); //new SceneGameRunHUD();
 		    
 		// Attach the HUD to the camera
 		activity.mCamera.setHUD(mHud);
+		
+		mHud.updateTimer(8.76f);
+		// activity.mCamera.setHUD(mHud2);
 
 		
 		
@@ -79,6 +84,7 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 				
 				pulsacionesText.setText( "Pulsaciones: " + pulsacionesInt );
 				
+				mHud.updateTimer(timerFloat);
 				
 				// ppsInt = pulsacionesInt / ( ((int)timerFloat > 0 ) ? (int)timerFloat : 1); //(a > b) ? a : b;
 				ppsFloat = (float)pulsacionesInt / ( (timerFloat > 0 ) ? timerFloat : 1f); //(a > b) ? a : b;

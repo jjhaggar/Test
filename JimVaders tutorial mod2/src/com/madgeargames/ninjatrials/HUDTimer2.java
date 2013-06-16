@@ -19,7 +19,7 @@ import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.util.Log;
 
-public class HUDTimer extends HUD{
+public class HUDTimer2 extends HUD{
 	
 	
 	private BaseActivity activity;
@@ -34,7 +34,7 @@ public class HUDTimer extends HUD{
 	
 	
 	// Constructor
-	public HUDTimer(){ //Font mFont){ // Log.v("Prueba pulsar rápido", "dentro HUD");
+	public HUDTimer2(){ //Font mFont){ // Log.v("Prueba pulsar rápido", "dentro HUD");
 		
 		
 		activity = BaseActivity.getSharedInstance();
@@ -58,12 +58,12 @@ public class HUDTimer extends HUD{
 		final AssetManager AssetManagerSB = activity.getAssets();
 		
 		StrokeFont orangeFontSB = FontFactory.createStrokeFromAsset(activity.getFontManager(), orangeFontTexture , AssetManagerSB, 
-				"dom_parquim.ttf", (float)35, true, android.graphics.Color.WHITE, 2, android.graphics.Color.BLACK );
+				"dom_parquim.ttf", (float)35, true, android.graphics.Color.RED, 10, android.graphics.Color.BLUE );
 		
 		orangeFontSB.load();
 		
-		final Text patataText = new Text(activity.CENTER_X, 900, orangeFontSB, "orangeFontSB", 
-				"orangeFontSB".length(), activity.getVertexBufferObjectManager());
+		final Text patataText = new Text(activity.CENTER_X, 800, orangeFontSB, "..............", 
+				"..............".length(), activity.getVertexBufferObjectManager());
 		
 		this.attachChild(patataText);
 		
