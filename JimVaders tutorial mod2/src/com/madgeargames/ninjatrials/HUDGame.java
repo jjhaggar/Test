@@ -3,6 +3,12 @@ package com.madgeargames.ninjatrials;
 import java.text.DecimalFormat;
 
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.entity.modifier.AlphaModifier;
+import org.andengine.entity.modifier.DelayModifier;
+import org.andengine.entity.modifier.ParallelEntityModifier;
+import org.andengine.entity.modifier.ScaleModifier;
+import org.andengine.entity.modifier.SequenceEntityModifier;
+import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.opengl.font.Font;
@@ -32,9 +38,10 @@ public class HUDGame extends HUD{
 	
 	
 	// PowerBarVertical fields
-	private int mIntPowBarVer; 
-	private Sprite mSpriteHUD;
-	
+	private Sprite mSpriteHUDPowerBar;
+	private int posPowBarX = 120;
+	private int posPowBarY = 200;
+	private Rectangle mRectangle;
 	
 	
 	// Constructor
@@ -57,96 +64,70 @@ public class HUDGame extends HUD{
 		}
 		
 		
+		
+		// final Sprite mSpriteHUDPrecissionBar = new Sprite(350, 130, activity.mTexRegHUDPrecissionBar, activity.getVertexBufferObjectManager());
+		// final Sprite mSpriteHUDHeads = new Sprite(400, 850, activity.mTexRegHUDHeads, activity.getVertexBufferObjectManager());
+		// attachChild(mSpriteHUDPrecissionBar);
+		// attachChild(mSpriteHUDHeads);
+		
 	}
 	
 	
+	public void showMessage(String message){ // Displaytime default = 1 second
+		showMessage(message, 0.25f, 1.0f, 0.25f); 
+	}
 	
-	/*
+	public void showMessage(String message, float msgEnterTime, float msgDisplayTime, float msgExitTime){
+		
+		FontFactory.setAssetBasePath("fonts/");
+		final BitmapTextureAtlas mTextureFontMessage = new BitmapTextureAtlas(activity.getTextureManager(),1024, 1024, TextureOptions.BILINEAR);
+		Font mFontMessage = FontFactory.createStrokeFromAsset(activity.getFontManager(), mTextureFontMessage , activity.getAssets(), 
+				"dom_parquim.ttf", (float)180, true, android.graphics.Color.YELLOW, 7, android.graphics.Color.RED ); // monofonto.ttf
+		
+		mFontMessage.load();
+		
+		final Text mTextMessage = new Text( 0, 0, mFontMessage, message, message.length(), activity.getVertexBufferObjectManager());
+		mTextMessage.setPosition(activity.CENTER_X, activity.CENTER_Y);
+		
+		this.attachChild(mTextMessage);
+		
+		mTextMessage.setAlpha(0);
+		mTextMessage.setScale(0.9f);
+		SequenceEntityModifier mSeqEntMod= new SequenceEntityModifier(
+				new ParallelEntityModifier(// entrada logo
+						new AlphaModifier(msgEnterTime, 0, 1), 
+						new ScaleModifier(msgEnterTime, 0.95f, 1)
+				),
+				new DelayModifier(msgDisplayTime),// logo quieto
+				new ParallelEntityModifier(// entrada logo
+						new AlphaModifier(msgExitTime, 1, 0), 
+						new ScaleModifier(msgExitTime, 1, 0.95f)
+				)
+			);
+		mTextMessage.registerEntityModifier(mSeqEntMod);
 	
+	}
 
-	// ===========================================================
-	// Constants          
-	// ===========================================================
-	private static final float FRAME_LINE_WIDTH = 5f;
-	// ===========================================================          
-	// Fields         
-	// =========================================================== 
-	private final Line[] mFrameLines = new Line[4];
-	private final Rectangle mBackgroundRectangle;
-	private final Rectangle mProgressRectangle;
-	
-	private final float mPixelsPerPercentRatio;
-	// ===========================================================          
-	// Constructors          
-	// =========================================================== 
-	public SceneGameRunHUD (final Camera pCamera, final float pX, final float pY, final float pWidth, final float pHeight) {
-		super();
-		super.setCamera(pCamera);
-		
-		this.mBackgroundRectangle = new Rectangle(pX, pY, pWidth, pHeight);
-		
-		this.mFrameLines[0] = new Line(pX, pY, pX+pWidth, pY, FRAME_LINE_WIDTH); //Top line.
-		this.mFrameLines[1] = new Line(pX + pWidth, pY, pX + pWidth, pY + pHeight, FRAME_LINE_WIDTH); //Right line.
-		this.mFrameLines[2] = new Line(pX + pWidth, pY + pHeight, pX, pY + pHeight, FRAME_LINE_WIDTH); //Bottom line.
-		this.mFrameLines[3] = new Line(pX, pY + pHeight, pX, pY, FRAME_LINE_WIDTH); //Left line.
-		
-		this.mProgressRectangle = new Rectangle(pX, pY, pWidth, pHeight);
-		
-		super.attachChild(this.mBackgroundRectangle); //This one is drawn first.
-		super.attachChild(this.mProgressRectangle); //The progress is drawn afterwards.
-		for(int i = 0; i < this.mFrameLines.length; i++)
-			super.attachChild(this.mFrameLines[i]); //Lines are drawn last, so they'll override everything.
-		
-		this.mPixelsPerPercentRatio = pWidth / 100;
-	}
-	// ===========================================================          
-	// Getter & Setter          
-	// =========================================================== 
-	public void setBackColor(final float pRed, final float pGreen, final float pBlue, final float pAlpha) {
-		this.mBackgroundRectangle.setColor(pRed, pGreen, pBlue, pAlpha);
-	}
-	public void setFrameColor(final float pRed, final float pGreen, final float pBlue, final float pAlpha) {
-		for(int i = 0; i < this.mFrameLines.length; i++)
-			this.mFrameLines[i].setColor(pRed, pGreen, pBlue, pAlpha);
-	}
-	public void setProgressColor(final float pRed, final float pGreen, final float pBlue, final float pAlpha) {
-		this.mProgressRectangle.setColor(pRed, pGreen, pBlue, pAlpha);
-	}
-	
-	// Set the current progress of this progress bar.
-	// @param pProgress is <b> BETWEEN </b> 0 - 100.
-	 
-	public void setProgress(final float pProgress) {
-		if(pProgress < 0)
-			this.mProgressRectangle.setWidth(0); //This is an internal check for my specific game, you can remove it.
-		this.mProgressRectangle.setWidth(this.mPixelsPerPercentRatio * pProgress);
-	}
-	// ===========================================================          
-	// Methods for/from SuperClass/Interfaces          
-	// ===========================================================  
-	
-	// ===========================================================          
-	// Methods          
-	// ===========================================================  
-	
-	// ===========================================================          
-	// Inner and Anonymous Classes          
-	// ===========================================================  
-	
-	*/
-	
+
 	
 	public void createPowerBarVertical(){
-		/*
-		this.mSpriteHUD = activity.mSpriteHUD;
-		this.mSpriteHUD.setPosition(100, 100);
-		this.attachChild(this.mSpriteHUD);
-		*/
-		
+		// Sprite
+		mSpriteHUDPowerBar = new Sprite(posPowBarX, posPowBarY, activity.mTexRegHUDPowerBar, activity.getVertexBufferObjectManager());
+		attachChild(mSpriteHUDPowerBar);
+		// Rectangle
+		int rectHeight = 200; int rectWidth = 80;
+		mRectangle = new Rectangle(posPowBarX, posPowBarY, rectWidth, rectHeight, activity.getVertexBufferObjectManager());
+		mRectangle.setColor(0f, 0f, 0f);
+		mRectangle.setScaleCenterY( 1 ); // se refiere al alto de la entidad en tanto por uno, no en pixels ^^U
+		attachChild(mRectangle);
 	}
 	
-	public void updatePowerBarVertical(int actualPower){
-		
+	public void updatePowerBarVertical(float actualPower){ // Values: 0 min / 1 max
+		// Comprobación valores permitidos
+		if (0f<=actualPower && actualPower<=1)
+			mRectangle.setScaleY( 1f - actualPower );
+		else
+			Log.v("HUDGame>updatePowerBarVertical()", "El valor debe estar entre 0 y 1, y es igual a "+actualPower);
 	}
 	
 	public void createTimer(){
@@ -180,19 +161,6 @@ public class HUDGame extends HUD{
 	public void resetTimer(){
 		// this.mTextTimer.detachSelf();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

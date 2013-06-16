@@ -58,8 +58,8 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	public Sprite mSpriteLogo;
 	
 	
-	private BuildableBitmapTextureAtlas mBuildableBitmapTextureAtlasHUD; // 1024*578
-	private ITextureRegion mTexRegHUDPowerBar, mTexRegHUDPrecissionBar, mTexRegHUDLine, mTexRegHUDLineMark, mTexRegHUDHeads, mTexRegHUDEyeFire;
+	public BuildableBitmapTextureAtlas mBuildableBitmapTextureAtlasHUD; // 1024*578
+	public ITextureRegion mTexRegHUDPowerBar, mTexRegHUDPrecissionBar, mTexRegHUDLine, mTexRegHUDLineMark, mTexRegHUDHeads, mTexRegHUDEyeFire;
 	public Sprite mSpriteHUD;
 	
 	
@@ -214,13 +214,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 		
 
 		
-		final Sprite mSpriteHUDPowerBar = new Sprite(120, 200, this.mTexRegHUDPowerBar, this.getVertexBufferObjectManager());
-		final Sprite mSpriteHUDPrecissionBar = new Sprite(350, 130, this.mTexRegHUDPrecissionBar, this.getVertexBufferObjectManager());
-		final Sprite mSpriteHUDHeads = new Sprite(400, 850, this.mTexRegHUDHeads, this.getVertexBufferObjectManager());
-		
-		mCurrentScene.attachChild(mSpriteHUDPowerBar);
-		mCurrentScene.attachChild(mSpriteHUDPrecissionBar);
-		mCurrentScene.attachChild(mSpriteHUDHeads);
+
 		
 		
 		

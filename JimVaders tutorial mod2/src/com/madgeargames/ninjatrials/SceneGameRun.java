@@ -64,6 +64,7 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		// Create the HUD
 		mHud = new HUDGame(HUDGame.RUNNING_STAGE); //new SceneGameRunHUD();
 		
+		
 		// HUDTimer2 mHud2 = new HUDTimer2(); //new SceneGameRunHUD();
 		    
 		// Attach the HUD to the camera
@@ -117,6 +118,10 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 			// Log.v("Prueba pulsar rápido", "pulsada pantalla " + pulsacionesInt + " veces.");
 			
 			// Log.v("Prueba pulsar rápido",  String.format("String.format: %.2f", speed) );
+			
+			
+			mHud.updatePowerBarVertical( (float)pulsacionesInt*5f/100f ); // prueba 
+			mHud.showMessage("Hola");
 			
 			return true;
 		}
