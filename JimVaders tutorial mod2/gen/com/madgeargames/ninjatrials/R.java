@@ -20,6 +20,8 @@ public final class R {
         public static final int accuracy=0x7f040005;
         public static final int app_name=0x7f040001;
         public static final int hello=0x7f040000;
+        public static final int high_speed_streak_1=0x7f04000a;
+        public static final int high_speed_streak_2=0x7f04000b;
         /**  MENU OPTIONS 
          */
         public static final int menu_start=0x7f040006;
