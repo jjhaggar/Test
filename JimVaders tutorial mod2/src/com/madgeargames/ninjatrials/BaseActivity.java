@@ -1,3 +1,15 @@
+/*
+ * Esta es la clase "Main" del juego. Debería hacer lo siguiente:
+ * 
+ * 1) Cargar (sólo) los assets de logos y luego cargar y mostrar la escena de los logos (SceneSplash), poniendo en marcha el 
+ * bucle "SceneSplash -> SceneIntro1 -> SceneMainMenu -> SceneSplash..." hasta que alguien pulse algo en SceneMainMenu
+ * 
+ * 2) Gestionar las cuentas de usuario si las hay (Ouya, Facebook, Google+, etc)
+ * 
+ * 3) Controlar si el usuario ha comprado algún contenido en la tienda Ouya 
+ * 
+ * */
+
 package com.madgeargames.ninjatrials;
 
 import org.andengine.engine.camera.Camera;

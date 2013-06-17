@@ -1,26 +1,34 @@
 package com.madgeargames.ninjatrials;
 
-import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
-import org.andengine.entity.text.TextOptions;
 import org.andengine.entity.util.FPSCounter;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.Font;
-import org.andengine.util.adt.align.HorizontalAlign;
 
-import android.util.Log;
+import android.widget.Toast;
 
 public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	
+	// Valores que deberíamos recibir desde la anterior escena, de un objeto creado de la clase "Player"
+	private String playerID = "adf76afd6afd7667a5d76f"; // id global
+	private String playerName = "JJHaggar"; // id local
+	private int playerNumber = 1;
+	private String playerCharacter = "Ryoko";
+	private int playerPoints = 0;
+	private int playerDifficultyChosen = 1;
+	
+	
+	// Fields
 	private BaseActivity activity;
 	
 	private Font mFont;
-	private float timerFloat;
+	private float timerStartedIn = 0; 
+	private float timerActualInstant;
 	private int pulsacionesInt = 0;
 	private float ppsFloat = 0;
 	private float ppsRecordFloat = 0;
@@ -34,8 +42,59 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		
 		setBackground(new Background(0.7f, 0.9f, 0));
 		
+		
+		
+		
+		runPreparation(); // <- Esto debería ser prácticamente lo único que hubiera en el constructor 
+
+		
+		this.setOnSceneTouchListener(this);
+		
+		
+		
+		
+	}// Constructor
+	
+	
+	private void runPreparation(){
+		
+		// Crea el HUD
+		mHud = new HUDGame(HUDGame.RUNNING_STAGE);
+		activity.mCamera.setHUD(mHud);
+		
+		// timerStartedIn = activity.getEngine().getSecondsElapsedTotal(); 
+		
+		runStart();
+		
+		/*
+		SequenceEntityModifier mSeqEntMod= new SequenceEntityModifier(
+				new ParallelEntityModifier(// entrada logo
+						new AlphaModifier(msgEnterTime, 0, 1), 
+						new ScaleModifier(msgEnterTime, 0.95f, 1)
+				),
+				new DelayModifier(msgDisplayTime),// logo quieto
+				new ParallelEntityModifier(// entrada logo
+						new AlphaModifier(msgExitTime, 1, 0), 
+						new ScaleModifier(msgExitTime, 1, 0.95f)
+				)
+			);
+		mTextMessage.registerEntityModifier(mSeqEntMod);
+		
+		*/
+		// int patata = 0;
+		
+		
+		
+		
+		
+		
+	} 
+	
+	private void runStart(){
+		
 		final FPSCounter fpsCounter = new FPSCounter();
 		activity.getEngine().registerUpdateHandler(fpsCounter);
+		
 		final float centerX = activity.CENTER_X;
 		
 		final Text elapsedText = new Text(centerX, 600, this.mFont, "Seconds elapsed:", "Seconds elapsed: XXXXXX".length(), activity.getVertexBufferObjectManager());
@@ -57,38 +116,24 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		this.attachChild(ppsText);
 		this.attachChild(ppsRecordText );
 		
-		Log.v("Prueba pulsar rápido", "Antes de crear HUD");
 		
-		// this.attachChild( new SceneGameRunHUD() );
-		
-		// Create the HUD
-		mHud = new HUDGame(HUDGame.RUNNING_STAGE); //new SceneGameRunHUD();
-		
-		
-		// HUDTimer2 mHud2 = new HUDTimer2(); //new SceneGameRunHUD();
-		    
-		// Attach the HUD to the camera
-		activity.mCamera.setHUD(mHud);
-		
-		mHud.updateTimer(8.76f);
-		// activity.mCamera.setHUD(mHud2);
 
 		
-		
+		// Bucle de juego (game loop)
 		this.registerUpdateHandler(new TimerHandler(1 / 10.0f, true, new ITimerCallback() {
 			@Override
 			public void onTimePassed(final TimerHandler pTimerHandler) {
-				timerFloat = activity.getEngine().getSecondsElapsedTotal();
-				elapsedText.setText(String.format("Seconds elapsed: %.2f", timerFloat));
+				timerActualInstant = activity.getEngine().getSecondsElapsedTotal();
+				elapsedText.setText(String.format("Seconds elapsed: %.2f", timerActualInstant));
 				
 				fpsText.setText(String.format("FPS: %.2f", fpsCounter.getFPS()));
 				
 				pulsacionesText.setText( "Pulsaciones: " + pulsacionesInt );
 				
-				mHud.updateTimer(timerFloat);
+				mHud.updateTimer(timerActualInstant);
 				
-				// ppsInt = pulsacionesInt / ( ((int)timerFloat > 0 ) ? (int)timerFloat : 1); //(a > b) ? a : b;
-				ppsFloat = (float)pulsacionesInt / ( (timerFloat > 0 ) ? timerFloat : 1f); //(a > b) ? a : b;
+				// ppsInt = pulsacionesInt / ( ((int)timerActualInstant > 0 ) ? (int)timerActualInstant : 1); //(a > b) ? a : b;
+				ppsFloat = (float)pulsacionesInt / ( (timerActualInstant > 0 ) ? timerActualInstant : 1f); //(a > b) ? a : b;
 				// ppsText.setText( "PPS: " + ppsFloat );
 				ppsText.setText( String.format("PPS: %.2f", ppsFloat) );
 				
@@ -100,11 +145,20 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 			}
 		}));
 		
-		this.setOnSceneTouchListener(this);
+		
+	} 
+	private void runFinish(){
 		
 		
-	}
+	} 
 	
+	
+	
+	
+	public void resetScene(){
+		mHud.detachChildren(); // activity.mCamera.getHUD().detachChildren();
+		mHud.detachSelf(); // activity.mCamera.getHUD().detachSelf();
+	}
 	
 	
 	
@@ -131,16 +185,7 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	}
 	
 	
-	public void resetScene(){
-		
-		
-		
-		
-		mHud.detachChildren(); // activity.mCamera.getHUD().detachChildren();
-		mHud.detachSelf(); // activity.mCamera.getHUD().detachSelf();
-		
-		
-	}
+
 	
 
 }

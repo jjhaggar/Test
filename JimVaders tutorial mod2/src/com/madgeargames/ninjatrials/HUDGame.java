@@ -1,3 +1,14 @@
+/*
+ * Esta es la clase que se encargará de representar los diferentes marcadores (HUD) durante las pruebas del juego.
+ * 
+ * Dependiendo del tipo de fase (carrera, corte, saltos, etc) se cargarán unos elementos del HUD u otros.
+ * 
+ * Los assets del HUD deberían precargarse (con el AssetManager) en la pantalla previa (SceneMap? SceneLoading?)
+ * 
+ * */
+
+
+
 package com.madgeargames.ninjatrials;
 
 import java.text.DecimalFormat;
@@ -43,11 +54,22 @@ public class HUDGame extends HUD{
 	private int posPowBarY = 200;
 	private Rectangle mRectangle;
 	
+	// Message fields
+	private Font mFontMessage;
+	
 	
 	// Constructor
 	public HUDGame(int typeOfGameScene){ //Font mFont){ // Log.v("Prueba pulsar rápido", "dentro HUD");
 		
 		activity = BaseActivity.getSharedInstance();
+		
+		// Inicio preparativos para mostrar mensajes
+		FontFactory.setAssetBasePath("fonts/");
+		final BitmapTextureAtlas mTextureFontMessage = new BitmapTextureAtlas(activity.getTextureManager(),1024, 1024, TextureOptions.BILINEAR);
+		mFontMessage = FontFactory.createStrokeFromAsset(activity.getFontManager(), mTextureFontMessage , activity.getAssets(), 
+				"dom_parquim.ttf", (float)180, true, android.graphics.Color.YELLOW, 7, android.graphics.Color.RED ); // monofonto.ttf
+		mFontMessage.load();
+		// Fin preparativos para mostrar mensajes
 		
 		switch (typeOfGameScene) {
 		case RUNNING_STAGE:
@@ -78,14 +100,7 @@ public class HUDGame extends HUD{
 	}
 	
 	public void showMessage(String message, float msgEnterTime, float msgDisplayTime, float msgExitTime){
-		
-		FontFactory.setAssetBasePath("fonts/");
-		final BitmapTextureAtlas mTextureFontMessage = new BitmapTextureAtlas(activity.getTextureManager(),1024, 1024, TextureOptions.BILINEAR);
-		Font mFontMessage = FontFactory.createStrokeFromAsset(activity.getFontManager(), mTextureFontMessage , activity.getAssets(), 
-				"dom_parquim.ttf", (float)180, true, android.graphics.Color.YELLOW, 7, android.graphics.Color.RED ); // monofonto.ttf
-		
-		mFontMessage.load();
-		
+	
 		final Text mTextMessage = new Text( 0, 0, mFontMessage, message, message.length(), activity.getVertexBufferObjectManager());
 		mTextMessage.setPosition(activity.CENTER_X, activity.CENTER_Y);
 		
@@ -93,6 +108,8 @@ public class HUDGame extends HUD{
 		
 		mTextMessage.setAlpha(0);
 		mTextMessage.setScale(0.9f);
+		
+		
 		SequenceEntityModifier mSeqEntMod= new SequenceEntityModifier(
 				new ParallelEntityModifier(// entrada logo
 						new AlphaModifier(msgEnterTime, 0, 1), 
@@ -109,7 +126,8 @@ public class HUDGame extends HUD{
 	}
 
 
-	
+	// Crea la barra de poder vertical. Está compuesta de un Sprite con un bitmap de fondo y un rectángulo negro superpuesto que simula 
+	// que la barra de energía crece o decrece (en realidad el rectángulo está tapando parte de dicha barra) 
 	public void createPowerBarVertical(){
 		// Sprite
 		mSpriteHUDPowerBar = new Sprite(posPowBarX, posPowBarY, activity.mTexRegHUDPowerBar, activity.getVertexBufferObjectManager());
@@ -121,15 +139,16 @@ public class HUDGame extends HUD{
 		mRectangle.setScaleCenterY( 1 ); // se refiere al alto de la entidad en tanto por uno, no en pixels ^^U
 		attachChild(mRectangle);
 	}
-	
-	public void updatePowerBarVertical(float actualPower){ // Values: 0 min / 1 max
-		// Comprobación valores permitidos
+	// Modifica la barra de energía. A valor 0 está vacía (el rectángulo la tapa completamente), a valor 1 está llena (el rectángulo no tapa nada)
+	public void updatePowerBarVertical(float actualPower){ 
+		// Comprobación valores permitidos. 0 min / 1 max
 		if (0f<=actualPower && actualPower<=1)
 			mRectangle.setScaleY( 1f - actualPower );
 		else
 			Log.v("HUDGame>updatePowerBarVertical()", "El valor debe estar entre 0 y 1, y es igual a "+actualPower);
 	}
 	
+	// Crea el Temporizador
 	public void createTimer(){
 		
 		FontFactory.setAssetBasePath("fonts/");
@@ -145,9 +164,10 @@ public class HUDGame extends HUD{
 		this.attachChild(mTextTimer);
 	}
 	
+	// Modifica el valor del Temporizador
 	public void updateTimer(float actualTime){
 		
-		if (actualTime >= 100) { // Cuidamos que no se intente mostrar un número más largo de 5 caracteres "00.00"
+		if (actualTime >= 100) { // Comprueba que no se intente mostrar un número más largo de 5 caracteres "00.00"
 			Log.w(this.getClass().toString(), "Sólo se puede marcar hasta 99,99 de tiempo");
 			this.mTextTimer.setText("ERROR");
 			return;
