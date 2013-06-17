@@ -20,6 +20,14 @@ public final class R {
         public static final int accuracy=0x7f040005;
         public static final int app_name=0x7f040001;
         public static final int hello=0x7f040000;
+        /**  MENU OPTIONS 
+         */
+        public static final int menu_start=0x7f040006;
+        public static final int run_finish=0x7f040009;
+        /**  RUNNING STAGE  
+         */
+        public static final int run_ready=0x7f040007;
+        public static final int run_start=0x7f040008;
         public static final int start=0x7f040004;
         public static final int title_1=0x7f040002;
         public static final int title_2=0x7f040003;

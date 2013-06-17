@@ -7,5 +7,18 @@
     <string name="title_2">Trials</string>
     <string name="start">Start</string>
     <string name="accuracy">Accuracy</string>
-
+	
+    
+    <!-- MENU OPTIONS -->
+    <string name="menu_start">Start</string>
+    
+    
+    <!-- RUNNING STAGE  -->
+    <string name="run_ready">Ready?</string>
+    <string name="run_start">Go!</string>
+    <string name="run_finish">Game Over</string>
+    
+    
+    
+    
 </resources>

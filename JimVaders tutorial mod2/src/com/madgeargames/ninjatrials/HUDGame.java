@@ -172,6 +172,13 @@ public class HUDGame extends HUD{
 			this.mTextTimer.setText("ERROR");
 			return;
 		}
+		
+		if (actualTime < 0 ){
+			Log.w(this.getClass().toString(), "No se pueden marcar valores negativos de tiempo");
+			this.mTextTimer.setText("00,00");
+			return;
+		}
+		
 		DecimalFormat mFormatter = new DecimalFormat("00.00");
 		String output = mFormatter.format(actualTime);
 		this.mTextTimer.setText(output);
