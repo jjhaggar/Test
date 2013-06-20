@@ -33,7 +33,7 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	private float timerPreviousInstant = 0;
 	private float timerSecondsGameLoopLogic = 1f/10f; // Se actualiza 10 veces por segundo (pocas en principio)
 	private float timerSecondsGameLoopAnimation = 1f/30f; // Yo diría que debería ser al revés, pero...
-	private float timeMax = 20; // Segundos. Tiempo máximo para completar la prueba
+	private float timeMax = 10; // Segundos. Tiempo máximo para completar la prueba
 	private float power = 0;
 	private boolean canGainPower = false;
 	private float substIncrMultiplier = 4; // Con esto se aumente la velocidad, tanto al incrementar la barra como al decrementarla 
@@ -64,6 +64,7 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	private float ppsRecordFloat = 0;
 	
 	private DecimalFormat mFormatter = new DecimalFormat("00.00");
+	private DecimalFormat mFormatCmb = new DecimalFormat("0.00");
 	
 	
 	
@@ -93,6 +94,10 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	
 	
 	private void runPreparation(){
+		
+		// Añadimos el personaje
+		this.attachChild(new CharacterRun());
+		
 		
 		// Crea el HUD
 		mHud = new HUDGame(HUDGame.RUNNING_STAGE);
@@ -158,6 +163,10 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 				if (power >= highPowerValue){
 					incrementHighPowerSeconds(); // BRUTAL SPEED STREAK!!
 				}
+				else {
+					highPowerSecondsActual = 0;
+					mHud.hideComboMessage();
+				}
 				
 				incrementDistanceReached(); // Se actualiza justo
 				
@@ -193,24 +202,34 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		
 		highPowerSecondsTotal += timerSecondsGameLoopLogic;
 		
+		if (highPowerSecondsActual == 0) {
+			// highPowerSecondsActual += timerSecondsGameLoopLogic; // si es la 1ª vez q entramos en "combo" sumamos el tiempo del instante anterior
+			mHud.showComboMessage( mFormatCmb.format(timerSecondsGameLoopLogic) + " " + activity.getString(R.string.high_speed_streak), 
+									activity.CENTER_X, 130 );	
+		}
+
 		if (highPowerPreviousInstant == timerPreviousInstant){ // El instante comprobado en el GameLoop lar última vez también estába en "highPower"
-			// if (highPowerSecondsActual == 0) highPowerSecondsActual += timerSecondsGameLoopLogic; // si es la 1ª vez q entramos en "combo" sumamos el tiempo del instante anterior
+
+			
+			
 			highPowerSecondsActual += timerSecondsGameLoopLogic;
 			if (highPowerSecondsActual > highPowerSecondsMax){
 				highPowerSecondsMax = highPowerSecondsActual;
 			}
-			mHud.showMessage(mFormatter.format(highPowerSecondsActual) + "!");
-			Log.v("mormor", mFormatter.format(highPowerSecondsActual) + "!");
+			
+			mHud.changeComboMessage( mFormatCmb.format(highPowerSecondsActual)+" "+activity.getString(R.string.high_speed_streak) );
+			
+			// mHud.showMessage(mFormatter.format(highPowerSecondsActual) + "!");
+			// Log.v("mormor", mFormatter.format(highPowerSecondsActual) + "!");
 		}
-		
-		
-		/*
 		else{
-			mHud.showMessage(timerSecondsGameLoopLogic + "!");
+			highPowerSecondsActual = timerSecondsGameLoopLogic;
+			// mHud.showMessage(timerSecondsGameLoopLogic + "!");
 			Log.v("mormor", timerSecondsGameLoopLogic + "!");
 		}
-		*/
+
 		
+
 		
 		
 		highPowerPreviousInstant = timerActualInstant; // Actualizamos esto al final del método
@@ -251,7 +270,34 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		
 		this.clearUpdateHandlers(); // Limpia los "UpdateHandlers" de la escena actual (this)
 		canGainPower = false;
-
+		
+		
+		mHud.showMessage(
+			"Results:" 
+			+"\n"+ "Dist: " + mFormatter.format(distanceReached) +"/"+ mFormatter.format(distanceTotalStage)
+			+"\n"+ "Combo(total): " + mFormatter.format(highPowerSecondsTotal)
+			+"\n"+ "Combo(Max): " + mFormatter.format(highPowerSecondsMax)
+			// +"\n"+ "HPStreakAct: " + mFormatter.format(highPowerSecondsActual)
+			, 1, 600, 1
+		);
+		
+		mHud.hideComboMessage();
+		
+		/*
+		 
+	 	private float distanceReached = 0;
+		private float distanceTotalStage = 0;
+		private boolean distanceCompleted = false;
+		private float highPowerValue = 90.0f; // Tanto por ciento de la barra de power necesario para hacer "HighPower-Combo"
+		private float highPowerSecondsActual = 0;
+		private float highPowerSecondsTotal = 0;
+		private float highPowerPreviousInstant = 0;
+		private float highPowerSecondsMax = 0; // No sé si premiar esto en la puntuación final :S
+		private float maxPowerValue = 110.0f; // Poder máximo REAL alcanzable. NO es 100. Es para dar al jugador un margen y que pueda mantenerse al 100%
+		 
+		*/
+		
+		
 		
 		// mHud.showMessage(mFormatter.format(highPowerSecondsMax) , 1,20,1); //highPowerSecondsTotal highPowerSecondsMax
 		

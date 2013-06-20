@@ -220,9 +220,9 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	protected Scene onCreateScene() {
 		mEngine.registerUpdateHandler(new FPSLogger());
 		
-		mCurrentScene = new SceneSplash();
+		// mCurrentScene = new SceneSplash();
 		// mCurrentScene = new SceneMainMenu();
-		// mCurrentScene = new SceneGameRun();
+		mCurrentScene = new SceneGameRun();
 		
 
 		

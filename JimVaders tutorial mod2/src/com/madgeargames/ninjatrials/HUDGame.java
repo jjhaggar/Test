@@ -22,12 +22,15 @@ import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
+import org.andengine.util.adt.align.HorizontalAlign;
 
 import android.util.Log;
+import org.andengine.entity.text.AutoWrap;
 
 public class HUDGame extends HUD{
 	
@@ -56,6 +59,8 @@ public class HUDGame extends HUD{
 	
 	// Message fields
 	private Font mFontMessage;
+	private Text mTextComboMessage;
+	
 	
 	
 	// Constructor
@@ -70,6 +75,15 @@ public class HUDGame extends HUD{
 				"dom_parquim.ttf", (float)180, true, android.graphics.Color.YELLOW, 7, android.graphics.Color.RED ); // monofonto.ttf
 		mFontMessage.load();
 		// Fin preparativos para mostrar mensajes
+		
+		// Lo mismo para los combos:
+		// final TextOptions txtOpt = new TextOptions (AutoWrap.LETTERS, 900, HorizontalAlign.LEFT);
+		// mTextComboMessage = new Text ( 0, 0, mFontMessage, "00.00"+activity.getString(R.string.high_speed_streak) , txtOpt , activity.getVertexBufferObjectManager());
+		
+		mTextComboMessage = new Text ( 0, 0, mFontMessage, "00.00 "+activity.getString(R.string.high_speed_streak) , new TextOptions() , activity.getVertexBufferObjectManager());
+		mTextComboMessage.setAlpha(0);
+		this.attachChild(mTextComboMessage);
+		
 		
 		switch (typeOfGameScene) {
 		case RUNNING_STAGE:
@@ -100,9 +114,12 @@ public class HUDGame extends HUD{
 	}
 	
 	public void showMessage(String message, float msgEnterTime, float msgDisplayTime, float msgExitTime){
+		showMessage(message, msgEnterTime, msgDisplayTime, msgExitTime, activity.CENTER_X, activity.CENTER_Y); 
+	}
 	
-		final Text mTextMessage = new Text( 0, 0, mFontMessage, message, message.length(), activity.getVertexBufferObjectManager());
-		mTextMessage.setPosition(activity.CENTER_X, activity.CENTER_Y);
+	public void showMessage(String message, float msgEnterTime, float msgDisplayTime, float msgExitTime, float xPos, float yPos){
+		
+		final Text mTextMessage = new Text( xPos, yPos, mFontMessage, message, new TextOptions(HorizontalAlign.CENTER), activity.getVertexBufferObjectManager());
 		
 		this.attachChild(mTextMessage);
 		
@@ -124,6 +141,28 @@ public class HUDGame extends HUD{
 		mTextMessage.registerEntityModifier(mSeqEntMod);
 	
 	}
+
+	
+	public void showComboMessage(String message){
+		showComboMessage(message, activity.CENTER_X, activity.CENTER_Y);
+	}
+	
+	public void showComboMessage(String message, float xPos, float yPos){
+		mTextComboMessage.setPosition(xPos, yPos);
+		mTextComboMessage.setText(message);
+		mTextComboMessage.setAlpha(1);
+		
+	}
+	
+	public void changeComboMessage(String message){
+		mTextComboMessage.setText(message);
+	}
+	
+	public void hideComboMessage(){
+		mTextComboMessage.setAlpha(0);
+	}
+	
+	
 
 
 	// Crea la barra de poder vertical. Está compuesta de un Sprite con un bitmap de fondo y un rectángulo negro superpuesto que simula 
