@@ -1,8 +1,8 @@
 package com.madgeargames.ninjatrials;
 
 import org.andengine.entity.Entity;
-import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.AnimatedSprite;
+import org.andengine.entity.sprite.AnimatedSprite.IAnimationListener;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
@@ -13,6 +13,8 @@ import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.debug.Debug;
 
+import android.util.Log;
+
 public class CharacterRun extends Entity { // extends Entity{
 	
 	
@@ -21,6 +23,20 @@ public class CharacterRun extends Entity { // extends Entity{
 	// Debe poder desplazarse por la pantalla
 	// Debe cargar un sólo Spritesheet, el de "correr" 
 	// Mejor Entity, así puedo "apilar capas" en el personaje (sombras, efectos, etc)
+	
+	private float speedMultiplier = 1;
+	
+	private IAnimationListener anilis;
+	
+	public AnimatedSprite zSprite;
+	
+	public static final int RUN_CHARGE_1 = 0;
+	public static final int RUN_CHARGE_2 = 1;
+	public static final int RUN_CHARGE_3 = 2;
+	public static final int RUN_STANDING = 3;
+	public static final int RUN_NORMAL = 4;
+	public static final int RUN_FAST = 5;
+	public static final int RUN_FASTEST = 6;
 	
 	
 	CharacterRun(){
@@ -41,17 +57,123 @@ public class CharacterRun extends Entity { // extends Entity{
 		}
 		
 		
-		AnimatedSprite zSprite = new AnimatedSprite(instance.CAMERA_WIDTH * 0.25f, instance.CAMERA_HEIGHT * 0.33f, zTextureRegion, instance.getVertexBufferObjectManager());
+		zSprite = new AnimatedSprite(instance.CAMERA_WIDTH * 0.25f, instance.CAMERA_HEIGHT * 0.33f, zTextureRegion, instance.getVertexBufferObjectManager());
 		// zSprite.setScale(8, 8);
 		
-		zSprite.animate(100);
-		zSprite.animate (new long[] {100, 100, 100, 100, 100, 100}, 
-				 		 new int [] { 3,   4,    5,   6,   7,   8}, true); //new int [] {0,   1,   2, 3, 4, 5, 6, 7, 8, 9, 10, 11  }, true);
+		// zSprite.animate(100);
+		// zSprite.animate (new long[] {100, 100, 100, 100, 100, 100}, 
+		//		 		 new int [] { 3,   4,    5,   6,   7,   8}, true); //new int [] {0,   1,   2, 3, 4, 5, 6, 7, 8, 9, 10, 11  }, true);
+		
+		// updateAnimation(RUN_STAND, 1);
 		
 		this.attachChild(zSprite);
-
+		
+		
+		
+		
+		
+		
+		
+		
 		
 	}
+	
+	
+	void updateSpeedMultiplier(float newSpeed){
+		this.speedMultiplier = newSpeed; 
+		zSprite.animate(100);
+		
+	}
+	
+	
+	void goToFrame(int frame){
+		zSprite.setCurrentTileIndex(frame);
+	}
+	
+	
+	void updateStandAnimation(float power){
+		
+		if (power == 0)
+			zSprite.setCurrentTileIndex(RUN_CHARGE_1);
+		else if  ( 1 <= power && power < 50)
+			zSprite.setCurrentTileIndex(RUN_CHARGE_2);
+		else if  ( 50 <= power && power < 90)
+			zSprite.setCurrentTileIndex(RUN_CHARGE_3);
+		else if  ( power >= 90)
+			zSprite.setCurrentTileIndex(RUN_CHARGE_3); // Aquí habría que ponerle aura a lo Dragon Ball
+		
+	}
+	
+	void updateRunAnimation(float power){
+		
+		// this.speedMultiplier = speedMultiplier;
+		// float sM = this.speedMultiplier;
+		
+		anilis  = new IAnimationListener() {
+			@Override
+			public void onAnimationStarted(AnimatedSprite pAnimatedSprite,
+					int pInitialLoopCount) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void onAnimationLoopFinished(AnimatedSprite pAnimatedSprite,
+					int pRemainingLoopCount, int pInitialLoopCount) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void onAnimationFrameChanged(AnimatedSprite pAnimatedSprite,
+					int pOldFrameIndex, int pNewFrameIndex) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void onAnimationFinished(AnimatedSprite pAnimatedSprite) {
+				updateRunAnimation(SceneGameRun.power);
+				Log.v("Ninja Trials", "SceneGameRun.power = "+SceneGameRun.power);
+			}
+		};
+		
+		
+		float sM; 
+		
+		if (power>0){
+			
+
+			
+			sM = 50/power; // speedMultiplier, variará entre 
+			
+			if (power <= 50){ // Run normal 
+				zSprite.animate(new long[]{(long)(100*sM),(long)(100*sM),(long)(100*sM),(long)(100*sM),(long)(100*sM),(long)(100*sM)}, 
+		 		 		new int []{3, 4, 5, 6, 7, 8}, false, anilis);
+			}
+			
+			if (power > 50 &&power <= 90){ // Run fast
+				zSprite.animate(new long[]{(long)(100*sM),(long)(100*sM),(long)(100*sM),(long)(100*sM),(long)(100*sM),(long)(100*sM)}, 
+		 		 		new int []{9, 10, 11, 12, 13, 14}, false, anilis);
+			}
+			
+			if (power > 90){ // Run fastest
+				zSprite.animate(new long[]{(long)(100*sM),(long)(100*sM),(long)(100*sM),(long)(100*sM),(long)(100*sM),(long)(100*sM)}, 
+		 		 		new int []{9, 10, 11, 12, 13, 14}, false, anilis);
+			}
+				
+			
+			
+			
+		}
+		
+		else { // if power == 0  // Standing animation
+			zSprite.animate(new long[]{100, 100, 100, 100},  
+							new int []{  0,   1,   2,   1}, false, anilis); 
+		}
+		
+		
+		
+		
+	}
+	
+	
+	
+	
 	
 	
 	

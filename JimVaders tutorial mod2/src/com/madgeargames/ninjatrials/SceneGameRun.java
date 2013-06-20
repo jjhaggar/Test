@@ -34,7 +34,7 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	private float timerSecondsGameLoopLogic = 1f/10f; // Se actualiza 10 veces por segundo (pocas en principio)
 	private float timerSecondsGameLoopAnimation = 1f/30f; // Yo diría que debería ser al revés, pero...
 	private float timeMax = 10; // Segundos. Tiempo máximo para completar la prueba
-	private float power = 0;
+	public static float power = 0;
 	private boolean canGainPower = false;
 	private float substIncrMultiplier = 4; // Con esto se aumente la velocidad, tanto al incrementar la barra como al decrementarla 
 	private float subtractNumber = 1 * substIncrMultiplier; // esto se resta cada décima de segundo a "power"
@@ -57,6 +57,12 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	private float highPowerPreviousInstant = 0;
 	private float highPowerSecondsMax = 0; // No sé si premiar esto en la puntuación final :S
 	private float maxPowerValue = 110.0f; // Poder máximo REAL alcanzable. NO es 100. Es para dar al jugador un margen y que pueda mantenerse al 100% 
+	
+	
+	// Personajes y fondo
+	private CharacterRun ryoko;
+	
+	
 	
 	// Pruebas
 	private int pulsacionesInt = 0;
@@ -96,8 +102,13 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	private void runPreparation(){
 		
 		// Añadimos el personaje
-		this.attachChild(new CharacterRun());
+		ryoko = new CharacterRun();
+		// ryoko.updateRunAnimation(CharacterRun.RUN_NORMAL, 1);
+		// zSprite.stopAnimation(); ryoko.goToFrame(0);
+		this.attachChild(ryoko);
 		
+		//ryoko.updateRunAnimation(CharacterRun.RUN_NORMAL, 0.10f);
+		//ryoko.updateSpeedMultiplier(1);
 		
 		// Crea el HUD
 		mHud = new HUDGame(HUDGame.RUNNING_STAGE);
@@ -115,6 +126,8 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 			public void onTimePassed(final TimerHandler pTimerHandler) {
 				
 				timerActualInstant = 5 + timerStartedIn - activity.getEngine().getSecondsElapsedTotal();
+				
+				ryoko.updateStandAnimation(power);
 				
 				if ( (int)timerActualInstant >= 4)
 					mHud.showMessage( activity.getString(R.string.run_ready) ); //mHud.showMessage("Ready?");
@@ -137,6 +150,8 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		
 		// Elimina los manejadores de actualización anteriores
 		this.clearUpdateHandlers();
+		
+		ryoko.updateRunAnimation(power);// Este método debería ser recursivo y comprobarse cada vez que se completa un ciclo de la animación  
 		
 		// Reinicia la cuenta del temporizador
 		timerStartedIn = activity.getEngine().getSecondsElapsedTotal();  
@@ -345,6 +360,10 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		// http://docs.oracle.com/javase/tutorial/essential/concurrency/sync.html
 		
 		if (canGainPower){ 
+			
+			float oldPower, newPower;
+			oldPower = power;
+			
 			pulsacionesInt++;
 
 			// mHud.updatePowerBarVertical( (float)pulsacionesInt*5f/100f ); // prueba 
@@ -385,6 +404,11 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 			
 			mHud.updatePowerBarVertical( power/100f ); // necesario para que se actualice duratne la cuenta atrás
 			
+			newPower = power;
+			
+			
+			checkGainPower(oldPower, newPower);
+			
 			// mHud.showMessage(""+power);
 			// Log.v("Push",""+power);
 			
@@ -393,6 +417,20 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 		
 		
 	}// gainPower
+	
+	
+	private void checkGainPower(float oldPower, float newPower){
+		
+		// La variable Power va de 0 a maxPowerValue (110 aproximadamente)
+		// Franjas de animación según velocidad: 0 | 1-39 | 40-69 | 70-100 
+		
+		
+		// TODO: Cambio de animación sólo cuando deba hacerlo
+		
+		
+		
+	} // checkGainPower
+	
 	
 	private void maxPower(){
 		
