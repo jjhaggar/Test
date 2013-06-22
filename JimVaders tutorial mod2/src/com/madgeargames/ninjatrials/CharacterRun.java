@@ -162,8 +162,10 @@ public class CharacterRun extends Entity { // extends Entity{
 		}
 		
 		else { // if power == 0  // Standing animation
-			zSprite.animate(new long[]{100, 100, 100, 100},  
-							new int []{  0,   1,   2,   1}, false, anilis); 
+			zSprite.animate(new long[]{300, 300, 300, 300},  
+							new int []{  0,   1,   2,   1}, false, anilis); // TODO: caso especial, no se puede dejar la animación en manos de "anilis"
+																			// pasa lo mismo con el caso de run normal a la mínima velocidad
+																			// quizás habría que cambiar el método en el que se cambian las animaciones
 		}
 		
 		

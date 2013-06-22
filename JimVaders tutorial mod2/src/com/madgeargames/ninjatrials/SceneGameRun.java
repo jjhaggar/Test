@@ -1,5 +1,6 @@
 package com.madgeargames.ninjatrials;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 
 import org.andengine.engine.handler.timer.ITimerCallback;
@@ -61,7 +62,7 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	
 	// Personajes y fondo
 	private CharacterRun ryoko;
-	
+	private BackgroundRun fondo;
 	
 	
 	// Pruebas
@@ -101,11 +102,29 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 	
 	private void runPreparation(){
 		
+		
+		
+		// Añadimos el fondo
+		try {
+			fondo = new BackgroundRun();
+			
+			this.attachChild(fondo);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// fondo.updateSpeed(1);
+		
+		
 		// Añadimos el personaje
 		ryoko = new CharacterRun();
 		// ryoko.updateRunAnimation(CharacterRun.RUN_NORMAL, 1);
 		// zSprite.stopAnimation(); ryoko.goToFrame(0);
 		this.attachChild(ryoko);
+		
+		
+		
 		
 		//ryoko.updateRunAnimation(CharacterRun.RUN_NORMAL, 0.10f);
 		//ryoko.updateSpeedMultiplier(1);
@@ -164,6 +183,8 @@ public class SceneGameRun  extends Scene implements IOnSceneTouchListener{
 				
 				timerActualInstant = timeMax + timerStartedIn - activity.getEngine().getSecondsElapsedTotal();
 				mHud.updateTimer(timerActualInstant);
+				
+				fondo.updateSpeed(power/10);
 				
 				if(power>0){
 					power -= subtractNumber;
