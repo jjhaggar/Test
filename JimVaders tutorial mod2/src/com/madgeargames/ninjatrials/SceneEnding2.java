@@ -30,7 +30,7 @@ import org.andengine.util.modifier.IModifier;
 import android.graphics.Typeface;
 import android.util.Log;
 
-public class SceneEnding extends Scene {
+public class SceneEnding2 extends Scene {
 	BaseActivity activity;
 	
 	private Sprite spriteLogoMG; // = BaseActivity.mSpriteLogo;
@@ -45,7 +45,7 @@ public class SceneEnding extends Scene {
 	// fin
 	
 	
-	public SceneEnding() {
+	public SceneEnding2() {
 		
 		activity = BaseActivity.getSharedInstance();
 		
