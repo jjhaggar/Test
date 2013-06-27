@@ -17,7 +17,9 @@ import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.util.FPSLogger;
 import org.andengine.extension.svg.opengl.texture.atlas.bitmap.SVGBitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.font.Font;
@@ -25,6 +27,7 @@ import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.font.StrokeFont;
 import org.andengine.opengl.texture.EmptyTexture;
 import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.Texture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
@@ -219,10 +222,9 @@ public class BaseActivity extends SimpleBaseGameActivity {
 		
 		// mCurrentScene = new SceneSplash();
 		// mCurrentScene = new SceneMainMenu();
+		mCurrentScene = new SceneGameRun();
 		
-		// mCurrentScene = new SceneGameRun();
-		
-		mCurrentScene = new SceneEnding();
+
 		
 
 		
